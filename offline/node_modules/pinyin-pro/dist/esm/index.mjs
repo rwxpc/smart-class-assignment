@@ -1,0 +1,11 @@
+export { getFinalParts, getInitialAndFinal, getNumOfTone } from './core/pinyin/handle.mjs';
+export { pinyin } from './core/pinyin/index.mjs';
+export { clearCustomDict, customPinyin } from './core/custom/index.mjs';
+export { addDict, removeDict } from './core/dict/index.mjs';
+export { match } from './core/match/index.mjs';
+export { html } from './core/html/index.mjs';
+export { polyphonic } from './core/polyphonic/index.mjs';
+export { convert } from './core/convert/index.mjs';
+export { segment } from './core/segment/index.mjs';
+export { addTraditionalDict, getTraditionalDict } from './core/traditional/index.mjs';
+export { OutputFormat } from './core/segment/middlewares.mjs';

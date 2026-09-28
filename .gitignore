@@ -1,0 +1,17 @@
+# 个人数据（含账号密码哈希、学生信息，严禁上传）
+offline/data/
+
+# 依赖与日志
+offline/server.log
+offline/*.log
+
+# 临时与测试产物
+offline/test_cookies.txt
+offline/cookies_test.txt
+offline/*.xlsx
+offline/test_flow.sh
+offline/test-import.js
+
+# 系统文件
+Thumbs.db
+.DS_Store

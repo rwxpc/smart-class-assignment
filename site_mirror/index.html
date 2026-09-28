@@ -1,0 +1,102 @@
+    <!DOCTYPE html>
+    <html lang="zh-CN">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="csrf-token" content="">
+        <title>中小学智能分班管理系统 - 登录</title>
+        <style>
+            * { margin: 0; padding: 0; box-sizing: border-box; }
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                min-height: 100vh; display: flex; align-items: center; justify-content: center;
+            }
+            .login-card {
+                background: #fff; border-radius: 12px; box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+                padding: 40px; width: 400px; max-width: 90vw;
+            }
+            .login-card h1 { font-size: 22px; text-align: center; margin-bottom: 4px; color: #333; }
+            .login-card .subtitle { font-size: 13px; text-align: center; color: #999; margin-bottom: 24px; }
+            .login-card label { font-size: 14px; color: #555; display: block; margin-bottom: 4px; margin-top: 12px; }
+            .login-card input[type="text"], .login-card input[type="password"] {
+                width: 100%; padding: 10px 14px; border: 1px solid #ddd; border-radius: 6px;
+                font-size: 15px; outline: none; transition: border-color .2s;
+            }
+            .login-card input:focus { border-color: #667eea; }
+            .login-card button {
+                width: 100%; margin-top: 20px; padding: 11px; border: none; border-radius: 6px;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                color: #fff; font-size: 16px; cursor: pointer; transition: opacity .2s;
+            }
+            .login-card button:hover { opacity: 0.9; }
+            .login-card button:disabled { opacity: 0.6; cursor: not-allowed; }
+            .login-card .error { color: #e53e3e; font-size: 13px; text-align: center; margin-top: 10px; display: none; }
+            .login-card .toggle { text-align: center; margin-top: 16px; font-size: 13px; color: #667eea; cursor: pointer; }
+            .login-card .toggle:hover { text-decoration: underline; }
+            .reg-field { display: none; }
+        </style>
+    </head>
+    <body>
+        <div class="login-card">
+            <h1>📋 中小学智能分班管理系统</h1>
+            <p class="subtitle" id="pageTitle">登录账号</p>
+            <form id="authForm" onsubmit="return doAuth()">
+                <label for="username">用户名</label>
+                <input type="text" id="username" placeholder="请输入用户名" autofocus required>
+                <label for="password">密码</label>
+                <input type="password" id="password" placeholder="请输入密码" required>
+                <div class="reg-field" id="regFields">
+                    <label for="displayName">学校/机构名称</label>
+                    <input type="text" id="displayName" placeholder="如：XX中学">
+                </div>
+                <button type="submit" id="btnAuth">登 录</button>
+                <p class="error" id="errMsg"></p>
+            </form>
+            <div class="toggle" id="toggleLink" onclick="toggleMode()">还没有账号？立即注册 →</div>
+        </div>
+        <script>
+        let isRegister = false;
+        function toggleMode() {
+            isRegister = !isRegister;
+            document.getElementById('pageTitle').textContent = isRegister ? '注册账号' : '登录账号';
+            document.getElementById('btnAuth').textContent = isRegister ? '注 册' : '登 录';
+            document.getElementById('toggleLink').innerHTML = isRegister ? '← 已有账号？去登录' : '还没有账号？立即注册 →';
+            document.getElementById('regFields').style.display = isRegister ? 'block' : 'none';
+            document.getElementById('errMsg').style.display = 'none';
+        }
+        async function doAuth() {
+            const btn = document.getElementById('btnAuth');
+            const err = document.getElementById('errMsg');
+            btn.disabled = true;
+            btn.textContent = isRegister ? '注册中…' : '登录中…';
+            err.style.display = 'none';
+            const body = 'username=' + encodeURIComponent(document.getElementById('username').value)
+                + '&password=' + encodeURIComponent(document.getElementById('password').value)
+                + '&display_name=' + encodeURIComponent(document.getElementById('displayName').value);
+            try {
+                const action = isRegister ? 'register' : 'login';
+                const resp = await fetch('?action=' + action, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: body
+                });
+                const data = await resp.json();
+                if (data.code === 200) {
+                    location.reload();
+                } else {
+                    err.textContent = data.msg || '操作失败';
+                    err.style.display = 'block';
+                }
+            } catch (e) {
+                err.textContent = '网络错误，请重试';
+                err.style.display = 'block';
+            }
+            btn.disabled = false;
+            btn.textContent = isRegister ? '注 册' : '登 录';
+            return false;
+        }
+        </script>
+    </body>
+    </html>
+    
